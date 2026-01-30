@@ -4,4 +4,6 @@ version = "0.1.0"
 description = "This module provides high-level control for the [OWL platform](#)."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pyserial>=3.5",
+]
