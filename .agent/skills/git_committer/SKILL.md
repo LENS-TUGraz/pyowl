@@ -23,8 +23,10 @@ Use this skill when you need to save changes to the version control system. It e
     *   **Quality**: The message must be concise but descriptive. Avoid vague messages like "update code".
 
 3.  **Execute Git Commands**:
-    *   **Stage Files**: Use `git add <file>` for specific files or `git add .` if all changes are related to the single commit.
+    *   **Multiple Logical Units**: If the changes cover multiple distinct logical units (e.g., a bug fix AND a new feature), split them into separate commits.
+    *   **Stage Files**: Use `git add <file>` for specific files to group changes for a single commit.
     *   **Commit**: Use `git commit -m "message"`.
+    *   Repeat the stage-and-commit process until all logical units are committed.
 
 4.  **Verification**:
     *   Run `git status` again to ensure the working directory is clean (or matches the expected state).
