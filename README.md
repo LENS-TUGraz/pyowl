@@ -25,9 +25,20 @@ The recommended way to use `pyowl` is with a context manager, which handles clea
 from pyowl import OWL
 
 with OWL(port='/dev/ttyUSB0') as owl:
-    # Send a command and get response
-    response = owl.send_command("STATUS")
-    print(f"Status: {response}")
+    # Set target position (in radians)
+    owl.set_target(3.14159)  # Set target to π radians
+    
+    # Get current target position
+    target = owl.get_target()
+    print(f"Target: {target} rad")
+    
+    # Get current absolute angle
+    absolute_angle = owl.get_absolute_angle()
+    print(f"Absolute angle: {absolute_angle} rad")
+    
+    # Get current mechanical angle (within current revolution)
+    mechanical_angle = owl.get_mechanical_angle()
+    print(f"Mechanical angle: {mechanical_angle} rad")
 ```
 
 ### Basic Example
@@ -41,8 +52,17 @@ owl = OWL(port='/dev/ttyUSB0')
 owl.open()
 
 try:
-    response = owl.send_command("STATUS")
-    print(f"Status: {response}")
+    # Set target position
+    owl.set_target(1.5708)  # Set target to π/2 radians
+    
+    # Get position information
+    target = owl.get_target()
+    absolute = owl.get_absolute_angle()
+    mechanical = owl.get_mechanical_angle()
+    
+    print(f"Target: {target} rad")
+    print(f"Absolute: {absolute} rad")
+    print(f"Mechanical: {mechanical} rad")
 finally:
     owl.close()
 ```
@@ -58,18 +78,23 @@ finally:
 - `port`: The serial port (e.g., `/dev/ttyUSB0` on Linux, `COM3` on Windows).
 - `baudrate`: Serial baud rate (default: 115200).
 - `timeout`: Read timeout in seconds (default: 1.0).
+- `**kwargs`: Additional arguments passed to `serial.Serial`.
 
 **Methods**:
 
 - `open()`: Opens the serial connection.
 - `close()`: Closes the serial connection.
-- `send_command(command: str) -> str`: Sends a text command and returns the response line.
-- `write(data: bytes) -> int`: Writes raw bytes to the device.
+- `write(data: bytes) -> int`: Writes raw bytes to the device. Returns the number of bytes written.
 - `read(size: int = 1) -> bytes`: Reads raw bytes from the device.
-- `read_line() -> str`: Reads a line of text, decoded as UTF-8.
+- `read_line(num_lines: int = 1) -> str`: Reads one or more lines of text, decoded as UTF-8.
+- `raw_command(command: str, num_lines: int = 1) -> str`: Sends a raw text command and reads the response. It is recommended to use the higher-level functions instead.
+- `set_target(target: float) -> None`: Sets the target position in radians.
+- `get_target() -> float`: Gets the current target position in radians.
+- `get_absolute_angle() -> float`: Gets the current absolute angle in radians (since last reset). Range: -∞ to +∞.
+- `get_mechanical_angle() -> float`: Gets the current mechanical angle in radians (within current revolution). Range: 0 to 2π.
 
 ---
 
 ## AI Disclosure
 
-LLMs were used for large parts of the project's creation.
+Large parts of the project were created with the help of AI tooling.

@@ -66,6 +66,7 @@ class OWL:
         """
         if self._serial is None or not self._serial.is_open:
             raise RuntimeError("Serial port is not open")
+        
         return self._serial.write(data)
 
     def read(self, size: int = 1) -> bytes:
@@ -85,28 +86,75 @@ class OWL:
             raise RuntimeError("Serial port is not open")
         return self._serial.read(size)
         
-    def read_line(self) -> str:
+    def read_line(self, num_lines: int = 1) -> str:
         """
         Read a line from existing serial connection.
+        
+        Args:
+            num_lines: Number of lines to read.
         
         Returns:
             Decoded string line stripped of whitespace.
         """
         if self._serial is None or not self._serial.is_open:
             raise RuntimeError("Serial port is not open")
-        line = self._serial.readline()
-        return line.decode('utf-8', errors='replace').strip()
 
-    def send_command(self, command: str) -> str:
+        lines = ""
+        for _ in range(num_lines):
+            line = self._serial.readline()
+            lines += line.decode('utf-8', errors='replace').strip()
+        return lines
+
+    def raw_command(self, command: str, num_lines: int = 1) -> str:
         """
-        Send a text command and return the response line.
+        Send raw text command and read response.
+        It is recommended to use the higher level functions, such as set_target(), get_target(), etc., instead.
         
         Args:
             command: The command string to send.
+            num_lines: Number of lines to read after sending the command.
             
         Returns:
             The response string.
         """
         cmd_bytes = f"{command}\n".encode('utf-8')
         self.write(cmd_bytes)
-        return self.read_line()
+        return self.read_line(num_lines)
+
+    def set_target(self, target: float) -> None:
+        """
+        Set the target position.
+        
+        Args:
+            target: The target position in radians.
+        """
+        self.raw_command(f"T{target}")
+
+    def get_target(self) -> float:
+        """
+        Get the target position.
+        
+        Returns:
+            The target position in radians.
+        """
+        return float(self.raw_command("T"))
+
+    def get_absolute_angle(self) -> float:
+        """
+        Get the current absolute angle.
+        The absolute angle is the angle since the last reset.
+        
+        Returns:
+            The current absolute angle in radians. Between -inf and inf.
+        """
+        return float(self.raw_command("A"))
+    
+    def get_mechanical_angle(self) -> float:
+        """
+        Get the current mechanical angle.
+        The mechanical angle is tha angle within the current revolution.
+        
+        Returns:
+            The current mechanical angle in radians. Between 0 and 2*pi.
+        """
+        return float(self.raw_command("R"))
