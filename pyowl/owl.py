@@ -1,5 +1,6 @@
+import math
 import serial
-from typing import Optional
+from typing import Optional, Literal
 
 class OWL:
     """
@@ -121,40 +122,61 @@ class OWL:
         self.write(cmd_bytes)
         return self.read_line(num_lines)
 
-    def set_target(self, target: float) -> None:
+    def set_target(self, target: float, unit: Literal["rad", "deg"] = "rad") -> None:
         """
         Set the target position.
         
         Args:
-            target: The target position in radians.
+            target: The target position.
+            unit: Unit of the target angle ("rad" for radians, "deg" for degrees). Default is "rad".
         """
+        if unit == "deg":
+            target = math.radians(target)
         self.raw_command(f"T{target}")
 
-    def get_target(self) -> float:
+    def get_target(self, unit: Literal["rad", "deg"] = "rad") -> float:
         """
         Get the target position.
         
+        Args:
+            unit: Unit of the returned angle ("rad" for radians, "deg" for degrees). Default is "rad".
+        
         Returns:
-            The target position in radians.
+            The target position in the specified unit.
         """
-        return float(self.raw_command("T"))
+        angle = float(self.raw_command("T"))
+        if unit == "deg":
+            return math.degrees(angle)
+        return angle
 
-    def get_absolute_angle(self) -> float:
+    def get_absolute_angle(self, unit: Literal["rad", "deg"] = "rad") -> float:
         """
         Get the current absolute angle.
         The absolute angle is the angle since the last reset.
         
-        Returns:
-            The current absolute angle in radians. Between -inf and inf.
-        """
-        return float(self.raw_command("A"))
-    
-    def get_mechanical_angle(self) -> float:
-        """
-        Get the current mechanical angle.
-        The mechanical angle is tha angle within the current revolution.
+        Args:
+            unit: Unit of the returned angle ("rad" for radians, "deg" for degrees). Default is "rad".
         
         Returns:
-            The current mechanical angle in radians. Between 0 and 2*pi.
+            The current absolute angle in the specified unit.
         """
-        return float(self.raw_command("R"))
+        angle = float(self.raw_command("A"))
+        if unit == "deg":
+            return math.degrees(angle)
+        return angle
+    
+    def get_mechanical_angle(self, unit: Literal["rad", "deg"] = "rad") -> float:
+        """
+        Get the current mechanical angle.
+        The mechanical angle is the angle within the current revolution.
+        
+        Args:
+            unit: Unit of the returned angle ("rad" for radians, "deg" for degrees). Default is "rad".
+        
+        Returns:
+            The current mechanical angle in the specified unit.
+        """
+        angle = float(self.raw_command("R"))
+        if unit == "deg":
+            return math.degrees(angle)
+        return angle

@@ -27,18 +27,19 @@ from pyowl import OWL
 with OWL(port='/dev/ttyUSB0') as owl:
     # Set target position (in radians)
     owl.set_target(3.14159)  # Set target to π radians
+    owl.set_target(180, unit="deg")  # Set target to 180°
     
     # Get current target position
     target = owl.get_target()
     print(f"Target: {target} rad")
     
-    # Get current absolute angle
+    # Get current absolute angle in radians
     absolute_angle = owl.get_absolute_angle()
     print(f"Absolute angle: {absolute_angle} rad")
     
-    # Get current mechanical angle (within current revolution)
-    mechanical_angle = owl.get_mechanical_angle()
-    print(f"Mechanical angle: {mechanical_angle} rad")
+    # Get current mechanical angle (within current revolution) in degrees
+    mechanical_angle = owl.get_mechanical_angle(unit="deg")
+    print(f"Mechanical angle: {mechanical_angle}°")
 ```
 
 ### Basic Example
@@ -88,10 +89,10 @@ finally:
 - `read(size: int = 1) -> bytes`: Reads raw bytes from the device.
 - `read_line(num_lines: int = 1) -> str`: Reads one or more lines of text, decoded as UTF-8.
 - `raw_command(command: str, num_lines: int = 1) -> str`: Sends a raw text command and reads the response. It is recommended to use the higher-level functions instead.
-- `set_target(target: float) -> None`: Sets the target position in radians.
-- `get_target() -> float`: Gets the current target position in radians.
-- `get_absolute_angle() -> float`: Gets the current absolute angle in radians (since last reset). Range: -∞ to +∞.
-- `get_mechanical_angle() -> float`: Gets the current mechanical angle in radians (within current revolution). Range: 0 to 2π.
+- `set_target(target: float, unit: Literal["rad", "deg"] = "rad") -> None`: Sets the target position.
+- `get_target(unit: Literal["rad", "deg"] = "rad") -> float`: Gets the current target position.
+- `get_absolute_angle(unit: Literal["rad", "deg"] = "rad") -> float`: Gets the current absolute angle (since last reset).
+- `get_mechanical_angle(unit: Literal["rad", "deg"] = "rad") -> float`: Gets the current mechanical angle (within current revolution).
 
 ---
 
