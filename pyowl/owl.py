@@ -67,7 +67,6 @@ class OWL:
         """
         if self._serial is None or not self._serial.is_open:
             raise RuntimeError("Serial port is not open")
-        
         return self._serial.write(data)
 
     def read(self, size: int = 1) -> bytes:
@@ -132,7 +131,7 @@ class OWL:
         """
         if unit == "deg":
             target = math.radians(target)
-        self.raw_command(f"T{target}")
+        self.raw_command(f"T{target:.3f}")
 
     def get_target(self, unit: Literal["rad", "deg"] = "rad") -> float:
         """
