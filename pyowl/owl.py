@@ -179,3 +179,30 @@ class OWL:
         if unit == "deg":
             return math.degrees(angle)
         return angle
+
+    def get_motor_voltage(self) -> float:
+        """
+        Get the motor voltage.
+        
+        Returns:
+            The motor voltage in volts.
+        """
+        return float(self.raw_command("V"))
+
+    def set_LED(self, on: bool) -> None:
+        """
+        Set the user LED state.
+        
+        Args:
+            on: Whether the LED should be on.
+        """
+        return self.raw_command(f"L{1 if on else 0}")
+
+    def buzz(self, duration: int) -> None:
+        """
+        Buzz the buzzer for a specified duration.
+        
+        Args:
+            duration: Duration of the buzz in milliseconds.
+        """
+        return self.raw_command(f"B{duration}")
