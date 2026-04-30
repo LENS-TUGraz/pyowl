@@ -100,7 +100,7 @@ finally:
 
 ## Related repositories
 
-[owl-firmware](https://github.com/sedlak477/owl-firmware): The firmware for the OWL platform.
+[owl-firmware](https://github.com/sedlak477/owl-firmware): The firmware for the OWL platform.  
 [owl-ranger](https://github.com/sedlak477/owl-ranger): A script for stepping through some orientations and recording measurements.
 
 ## AI Disclosure
