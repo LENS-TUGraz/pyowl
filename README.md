@@ -74,11 +74,11 @@ finally:
 ### `OWL` Class
 
 **Constructor**:
-`OWL(port: str, baudrate: int = 115200, timeout: float = 1.0, **kwargs)`
+`OWL(port: str, baudrate: int = 115200, timeout: float = 10.0, **kwargs)`
 
 - `port`: The serial port (e.g., `/dev/ttyUSB0` on Linux, `COM3` on Windows).
 - `baudrate`: Serial baud rate (default: 115200).
-- `timeout`: Read timeout in seconds (default: 1.0).
+- `timeout`: Read timeout in seconds (default: 10.0).
 - `**kwargs`: Additional arguments passed to `serial.Serial`.
 
 **Methods**:
@@ -93,6 +93,10 @@ finally:
 - `get_target(unit: Literal["rad", "deg"] = "rad") -> float`: Gets the current target position.
 - `get_absolute_angle(unit: Literal["rad", "deg"] = "rad") -> float`: Gets the current absolute angle (since last reset).
 - `get_mechanical_angle(unit: Literal["rad", "deg"] = "rad") -> float`: Gets the current mechanical angle (within current revolution).
+- `get_motor_voltage() -> float`: Gets the motor voltage in volts.
+- `set_LED(on: bool) -> None`: Sets the user LED state.
+- `buzz(duration: int) -> None`: Buzzes the buzzer for a specified duration in milliseconds.
+- `goto(target: float, unit: Literal["rad", "deg"] = "rad") -> None`: Moves the OWL to a target position. Blocks until the target is reached.
 
 ---
 

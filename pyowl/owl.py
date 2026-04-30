@@ -11,7 +11,7 @@ class OWL:
         self,
         port: str,
         baudrate: int = 115200,
-        timeout: float = 1.0,
+        timeout: float = 10.0,
         **kwargs
     ):
         """
@@ -20,7 +20,7 @@ class OWL:
         Args:
             port: Serial port name (e.g., '/dev/ttyUSB0' or 'COM3')
             baudrate: Serial communication speed (default: 115200)
-            timeout: Read timeout in seconds (default: 1.0)
+            timeout: Read timeout in seconds (default: 10.0)
             **kwargs: Additional arguments passed to serial.Serial
         """
         self.port = port
@@ -196,7 +196,7 @@ class OWL:
         Args:
             on: Whether the LED should be on.
         """
-        return self.raw_command(f"L{1 if on else 0}")
+        self.raw_command(f"L{1 if on else 0}")
 
     def buzz(self, duration: int) -> None:
         """
@@ -205,4 +205,17 @@ class OWL:
         Args:
             duration: Duration of the buzz in milliseconds.
         """
-        return self.raw_command(f"B{duration}")
+        self.raw_command(f"B{duration}")
+
+    def goto(self, target: float, unit: Literal["rad", "deg"] = "rad") -> None:
+        """
+        Move the OWL to a target position.
+        Blocks until the target is reached.
+        
+        Args:
+            target: The target position.
+            unit: Unit of the target angle ("rad" for radians, "deg" for degrees). Default is "rad".
+        """
+        if unit == "deg":
+            target = math.radians(target)
+        self.raw_command(f"G{target:.3f}")
