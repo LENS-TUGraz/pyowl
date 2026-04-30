@@ -2,6 +2,8 @@ import math
 import serial
 from typing import Optional, Literal
 
+logger = logging.getLogger(__name__)
+
 class OWL:
     """
     Interface for controlling the OWL platform via serial communication.
@@ -102,6 +104,9 @@ class OWL:
         lines = ""
         for _ in range(num_lines):
             line = self._serial.readline()
+            if not line:
+                logger.warning("Serial read timeout")
+                return None
             lines += line.decode('utf-8', errors='replace').strip()
         return lines
 
